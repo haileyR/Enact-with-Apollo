@@ -2,7 +2,7 @@
 	"name": "newapp",
 	"version": "1.0.0",
 	"description": "A general template for an Enact Moonstone application.",
-	"author": "",
+	"author": "Hailey HanGyeol Ryu",
 	"main": "src/index.js",
 	"scripts": {
 		"serve": "enact serve",
