@@ -9,13 +9,14 @@ import Detail from '../views/Detail';
 import Search from '../views/Search';
 
 import ApolloClient from "apollo-boost";
+import config from '../config.json';
 
 const client = new ApolloClient({
   uri: 'https://api.github.com/graphql',
 	request: operation => {
     operation.setContext({
       headers: {
-        authorization: `Bearer 7b660af50f12eb710c5a3af8743ef29dbb46262b`,
+        authorization: `Bearer ${config.token}`,
       },
     });
   },
@@ -39,8 +40,6 @@ class AppBase extends Component {
 
 	static propTypes = {
 		index: PropTypes.number,
-		userId: PropTypes.string,
-		onNavigate: PropTypes.func,
 		onSearch: PropTypes.func,
 	};
 
