@@ -10,9 +10,10 @@ const SearchBase = kind({
   name: 'Detail',
 
   propTypes: {
+    userId: PropTypes.string,
     onSearch: PropTypes.func,
-    onChange: PropTypes.func,
-    userId: PropTypes.string
+    onUserIdChange: PropTypes.func,
+    onListSelectionChange: PropTypes.func
   },
 
   handlers: {
@@ -20,29 +21,31 @@ const SearchBase = kind({
       props.onSearch();
     },
     onInputChange: (ev, props) => {
-      props.onChange('userId', ev.value);
+      props.onUserIdChange(ev.value);
     },
     onRepoSelection: (value, props) => {
-      props.onChange('repo', value.selected);
+      props.onListSelectionChange('repo', value.selected);
     },
     onFolSelection: (value, props) => {
-      props.onChange('fol', value.selected);
+      props.onListSelectionChange('fol', value.selected);
     },
     onOrgSelection: (value, props) => {
-      props.onChange('org', value.selected);
+      props.onListSelectionChange('org', value.selected);
     }
   },
 
-  render: ({onInputChange, onSearch, onRepoSelection, onFolSelection, onOrgSelection, ...rest}) => (
-          <Panel {...rest}>
+  render: ({onInputChange, onSearch, onRepoSelection, onFolSelection, onOrgSelection, ...rest}) => {
+    delete rest.onUserIdChange;
+    delete rest.onListSelectionChange;
+    return (<Panel {...rest}>
             <Header title="Dev checks" type="compact"/>
             <Input placeholder="Github id" onChange={onInputChange}/>
             <IconButton onClick={onSearch} small={false} backgroundOpacity="transparent">search</IconButton>
             <FormCheckboxItem onToggle={onRepoSelection}>Repositories</FormCheckboxItem>
             <FormCheckboxItem onToggle={onFolSelection}>Followers</FormCheckboxItem>
             <FormCheckboxItem onToggle={onOrgSelection}>Organizations</FormCheckboxItem>
-          </Panel>
-        )
+          </Panel>)
+        }
 });
 
 export default SearchBase;

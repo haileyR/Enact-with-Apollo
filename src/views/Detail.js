@@ -48,22 +48,28 @@ const renderItem = ({items}) => ({index, ...rest}) => {
   }
 }
 
+// Checks how many lists to display we want to show in the user details panel.
+const getNumberOfLists = (lists) => {
+  return Object.values(lists).reduce((acc, currentVal) => {
+    if (currentVal && typeof currentVal === "boolean") {
+      acc += 1;
+    }
+    return acc;
+  }, 0);
+}
+
 const DetailBase = kind({
   name: 'Detail',
 
   propTypes: {
-    formData: PropTypes.object
+    userId: PropTypes.string,
+    lists: PropTypes.object
   },
 
-  render: ({formData, ...rest}) => (
-    <Query query={GET_USER} variables={{ login: formData.userId }}>
+  render: ({userId, lists, ...rest}) => (
+    <Query query={GET_USER} variables={{ login: userId }}>
 			{({loading, data}) => {
-        let listNumber = Object.values(formData).reduce((acc, currentVal) => {
-          if (currentVal && typeof currentVal === "boolean") {
-            acc += 1;
-          }
-          return acc;
-        }, 0);
+        let listNumber = getNumberOfLists(lists);
         return (<Panel {...rest}>
         {loading ? <p>Loading...</p> : !data || !data.user ? <p>User not found...</p> :
           (
@@ -71,8 +77,8 @@ const DetailBase = kind({
               <Header title={data.user.name} type="compact">
                 <Image src={data.user.avatarUrl} style={{height: '3rem'}} sizing='fit'/>
               </Header>
-              <div>
-              {formData.repo && <div>
+              <div className={css["alllistcontainer"]}>
+              {lists.repo && <div className={css["listcontainer"]}>
                 <Divider>Repositories</Divider>
                 <VirtualList
                   dataSize={data.user.repositories.nodes.length}
@@ -83,7 +89,7 @@ const DetailBase = kind({
                   className={css[`listHeight${listNumber}`]}
                 />
               </div>}
-              {formData.org && <div>
+              {lists.org && <div  className={css["listcontainer"]}>
                 <Divider>Organizations</Divider>
                 <VirtualList
                   dataSize={data.user.organizations.nodes.length}
@@ -94,7 +100,7 @@ const DetailBase = kind({
                   className={css[`listHeight${listNumber}`]}
                 />
               </div>}
-              {formData.fol && <div>
+              {lists.fol && <div  className={css["listcontainer"]}>
                 <Divider>Followers</Divider>
                 <VirtualList
                   dataSize={data.user.followers.nodes.length}
