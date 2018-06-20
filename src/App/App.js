@@ -24,11 +24,11 @@ const client = new ApolloClient({
 class AppBase extends Component {
 	constructor(props){
 		super(props);
-		this.userId = '';
+		this.userId = 'haileyr';
 		this.lists = {
-			repo: false,
-			fol: false,
-			org: false
+			repo: true,
+			fol: true,
+			org: true
 		};
 
 		this.state = {
