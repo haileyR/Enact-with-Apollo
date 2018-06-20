@@ -7,37 +7,44 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const renderItem = ({items}) => ({index, ...rest}) => {
-  if (items && items[index]) {
-    return (
-      <Item {...rest}
-        items={items}
-        index={index}>
-        {items[index].name}
-      </Item>
-    )
-  }
-}
+// eslint-disable-next-line enact/display-name, enact/prop-types
+const renderItem = ({list}) => ({index, ...rest}) => {
+	return (
+		<Item
+			{...rest}
+			index={index}
+		>
+			{list[index].name}
+		</Item>
+	);
+};
 
 const ListBase = kind({
-  name: 'Detail',
+	name: 'Detail',
 
-  propTypes: {
-    user: PropTypes.object
-  },
+	propTypes: {
+		list: PropTypes.object,
+		userId: PropTypes.string
+	},
 
-  render: ({list}) => {
-    return [
-      <Cell key='header' shrink><Divider>Repositories</Divider></Cell>,
-      <Cell component={VirtualList} size={list.length <= 4 ? (60 * list.length) : null}
-        key='list'
-        dataSize={list.length}
-        focusableScrollbar={null}
-        itemRenderer={renderItem({ items: list})}
-        itemSize={scale(60)}
-        spacing={0}
-      />]
-    }
+	computed: {
+		itemRenderer: renderItem
+	},
+
+	render: ({itemRenderer, list}) => {
+		return [
+			<Cell key="header" shrink><Divider>Repositories</Divider></Cell>,
+			<Cell
+				component={VirtualList} size={list.length <= 4 ? (60 * list.length) : null}
+				key="list"
+				dataSize={list.length}
+				focusableScrollbar={null}
+				itemRenderer={itemRenderer}
+				itemSize={scale(60)}
+				spacing={0}
+			/>];
+	}
 });
+
 export default ListBase;
 export {ListBase as List, ListBase};

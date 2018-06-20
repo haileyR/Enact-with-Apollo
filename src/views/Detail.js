@@ -4,9 +4,9 @@ import {Column} from '@enact/ui/Layout';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Query } from "react-apollo";
-import gql from "graphql-tag";
-import List from "../components/list";
+import {Query} from 'react-apollo';
+import gql from 'graphql-tag';
+import List from '../components/list';
 
 const GET_USER = gql`
   query($login: String!) {
@@ -34,32 +34,35 @@ const GET_USER = gql`
 `;
 
 const DetailBase = kind({
-  name: 'Detail',
+	name: 'Detail',
 
-  propTypes: {
-    userId: PropTypes.string,
-    lists: PropTypes.object
-  },
+	propTypes: {
+		lists: PropTypes.object,
+		userId: PropTypes.string
+	},
 
-  render: ({userId, lists, ...rest}) => (
-    <Query query={GET_USER} variables={{ login: userId }}>
+	render: ({userId, lists, ...rest}) => (
+		<Query query={GET_USER} variables={{login: userId}}>
 			{({loading, data}) => {
-        if (loading || (!data && !data.user))
-          {return (<Panel {...rest}>{loading ? <p>Loading...</p> : !data || !data.user ? null : <p>User not found...</p>}</Panel>);}
-        else
-          {return (<Panel {...rest}>
-          <Header type="compact" title={data.user.name}>
-            <Image src={data.user.avatarUrl} style={{height: '3rem'}} sizing='fit'/>
-          </Header>
-              <Column>
-              {lists.repo && <List list={data.user.repositories.nodes} />}
-              {lists.org && <List list={data.user.organizations.nodes} />}
-              {lists.fol &&  <List list={data.user.followers.nodes} />}
-              </Column>
-        </Panel>)}
-      }}
-    </Query>
-  )
+				if (loading) {
+					return (<Panel {...rest}><p>Loading...</p></Panel>);
+				} else if (!data && !data.user) {
+					return <Panel {...rest}><p>User not found...</p></Panel>;
+				} else {
+					return (<Panel {...rest}>
+						<Header type="compact" title={data.user.name}>
+							<Image src={data.user.avatarUrl} style={{height: '3rem'}} sizing="fit" />
+						</Header>
+						<Column>
+							{lists.repo && <List list={data.user.repositories.nodes} />}
+							{lists.org && <List list={data.user.organizations.nodes} />}
+							{lists.fol &&  <List list={data.user.followers.nodes} />}
+						</Column>
+					</Panel>);
+				}
+			}}
+		</Query>
+	)
 });
 export default DetailBase;
 export {DetailBase as Detail, DetailBase};
